@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClipperStudio AI Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .aspect-9-16 { aspect-ratio: 9/16; }
+        .aspect-16-9 { aspect-ratio: 16/9; }
+        .aspect-1-1 { aspect-ratio: 1/1; }
+    </style>
+</head>
+<body class="bg-gray-950 text-white font-sans antialiased min-h-screen flex flex-col md:flex-row">
+
+    <!-- Sidebar -->
+    <aside class="w-full md:w-64 bg-gray-900 border-b md:border-b-0 md:border-r border-gray-800 p-4 flex flex-col justify-between">
+        <div>
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-xl">CS</div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight">ClipperStudio</h1>
+                    <span class="text-xs text-gray-400">AI Video Editor</span>
+                </div>
+            </div>
+
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center gap-3 px-3 py-2 bg-indigo-600/20 text-indigo-400 rounded-lg font-medium text-sm">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Studio AI
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:bg-gray-800 rounded-lg font-medium text-sm transition">
+                    <i class="fa-solid fa-folder-open"></i> Projek Saya
+                </a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 text-gray-400 hover:bg-gray-800 rounded-lg font-medium text-sm transition">
+                    <i class="fa-solid fa-chart-line"></i> Analitik Viral
+                </a>
+            </nav>
+        </div>
+
+        <div class="mt-6 bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+            <div class="flex justify-between items-center text-xs mb-2">
+                <span class="text-gray-400">Kredit AI</span>
+                <span class="text-indigo-400 font-semibold">120 / 150</span>
+            </div>
+            <div class="w-full bg-gray-700 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-full w-[80%]"></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+        
+        <!-- Header / Link Input -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <h2 class="text-2xl font-bold mb-2">Buat Klip Viral dari Link Video</h2>
+            <p class="text-gray-400 text-sm mb-4">Tempelkan link YouTube/TikTok atau upload file untuk memotong secara otomatis.</p>
+            
+            <div class="flex flex-col sm:flex-row gap-3">
+                <input id="video-url" type="text" placeholder="https://www.youtube.com/watch?v=..." class="flex-1 bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-indigo-500">
+                <button onclick="processLink()" class="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-bolt"></i> Generate Clips
+                </button>
+            </div>
+        </div>
+
+        <!-- Studio Editor Area -->
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Video Player -->
+            <div class="md:col-span-2 bg-gray-900 border border-gray-800 rounded-2xl p-4 flex flex-col items-center justify-center">
+                <div id="player-container" class="w-full max-w-sm aspect-9-16 bg-black rounded-xl relative overflow-hidden flex items-center justify-center border border-gray-800">
+                    <video id="main-video" class="w-full h-full object-cover" controls>
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+                    </video>
+                    <div class="absolute bottom-12 inset-x-4 text-center pointer-events-none">
+                        <span id="subtitle-preview" class="bg-black/70 text-yellow-300 font-black px-3 py-1 rounded text-sm uppercase tracking-wide">
+                            KLIP VIRAL OTOMATIS
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Aspect Ratio Switcher -->
+                <div class="flex gap-2 mt-4">
+                    <button onclick="setAspect('9-16')" class="bg-gray-800 hover:bg-gray-700 text-xs px-3 py-1.5 rounded-lg border border-gray-700">9:16 Shorts</button>
+                    <button onclick="setAspect('16-9')" class="bg-gray-800 hover:bg-gray-700 text-xs px-3 py-1.5 rounded-lg border border-gray-700">16:9 YouTube</button>
+                    <button onclick="setAspect('1-1')" class="bg-gray-800 hover:bg-gray-700 text-xs px-3 py-1.5 rounded-lg border border-gray-700">1:1 Square</button>
+                </div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex flex-col justify-between">
+                <div>
+                    <h3 class="font-bold text-sm mb-4 border-b border-gray-800 pb-2">Pengaturan Subtitle AI</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Gaya Teks Subtitle</label>
+                            <select onchange="changeSubStyle(this.value)" class="w-full bg-gray-800 border border-gray-700 rounded-lg p-2 text-xs">
+                      
